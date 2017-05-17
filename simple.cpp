@@ -3,13 +3,13 @@
 
 int lSpeed;
 int rSpeed;
-int baseSpeed = 80;
+int baseSpeed = 50;
 
 int futureError;
 int error;
 
-int kProportional;
-int kDerivative;
+int kProportional = 0.3;
+int kDerivative = 0.05;
 
 int proportional;
 int derivative;
@@ -48,8 +48,8 @@ int main(){
 		proportional = error*kProportional;
 		derivative = (futureError-error)*kDerivative;
 		
-		rSpeed = baseSpeed + proportional + derivative;
-		lSpeed = baseSpeed - proportional - derivative;
+		lSpeed = baseSpeed + proportional + derivative;
+		rSpeed = baseSpeed - proportional - derivative;
 		
 		//Need to have functions to check for intersections here
 		// --->
