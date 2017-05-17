@@ -16,28 +16,23 @@
 **/
 
 
-int lSpeed;
-int rSpeed;
-int baseSpeed = 50;
+double lSpeed;
+double rSpeed;
 
 int futureError;
 int error;
 
-int kProportional = 0.05;
-int kDerivative = 0.01;
+double kProportional = 0.007;
 
-int proportional;
-int derivative;
+double proportional;
 
 int whitePixelCount;
-int whiteThreshold = 127;
+double whiteThreshold = 100;
 
 bool intersection = false;
 bool lineLost = false;
 
-int main(){
-	init();
-	
+int quad1(){
 	while(intersection==false && lineLost==false){
 		int pixel;
 		whitePixelCount=0;
@@ -51,20 +46,13 @@ int main(){
 				error += (i-160);
 				whitePixelCount++;
 			}
+			//printf("whitePixelCount: %d\n", whitePixelCount);
 		}
-		for(int i=0;i<319;i++){
-			pixel=get_pixel(60,i,3);
-			if (pixel>whiteThreshold){
-				futureError += (i-160);
-			}
-		}
-		printf("futureError: %d\n", futureError);
 		printf("error: %d\n", error);
 		proportional = error*kProportional;
-		derivative = (futureError-error)*kDerivative;
 		
-		rSpeed = baseSpeed + proportional + derivative;
-		lSpeed = baseSpeed - proportional - derivative;
+		rSpeed = 165 -proportional;
+		lSpeed = 165 +proportional;
 		
 		//Need to have functions to check for intersections here
 		// --->
@@ -73,8 +61,20 @@ int main(){
 			set_motor(1,lSpeed);
 			set_motor(2,rSpeed);
 			}
+		else{
+			set_motor(1, -200);
+			set_motor(2, -200);
+
+		}
 		
 	}
+	stop(1);
+	stop(2);
+}
+
+int main(){
+	init();
+	quad1();
 	
 	return 0;
 	}

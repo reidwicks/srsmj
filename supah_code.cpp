@@ -29,7 +29,7 @@ int main(){
 		int i, w, s;
 		double v_left, v_right;
 		for(i=0; i<319; i++){
-			w = get_pixel(i,120,3);
+			w = get_pixel(120,i,3);
 			if(w>127){
 				s=1;
 			}
