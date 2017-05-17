@@ -1,6 +1,21 @@
 #include <stdio.h>
 #include "E101.h"
 
+/*----------------------------/
+ * AVC Project Team Serious Mojo (SRSMJ)
+ * 
+ * Shadrach Luke Hargreaves
+ * Reid Alexander Wicks
+ * Sean Naylor
+ * Max Watson
+ * Josh Bolitho
+ **/
+
+/* motor 1 = left hand side
+ * motor 2 = right hand side 
+**/
+
+
 int lSpeed;
 int rSpeed;
 int baseSpeed = 50;
@@ -8,8 +23,8 @@ int baseSpeed = 50;
 int futureError;
 int error;
 
-int kProportional = 0.3;
-int kDerivative = 0.05;
+int kProportional = 0.05;
+int kDerivative = 0.01;
 
 int proportional;
 int derivative;
@@ -48,8 +63,8 @@ int main(){
 		proportional = error*kProportional;
 		derivative = (futureError-error)*kDerivative;
 		
-		lSpeed = baseSpeed + proportional + derivative;
-		rSpeed = baseSpeed - proportional - derivative;
+		rSpeed = baseSpeed + proportional + derivative;
+		lSpeed = baseSpeed - proportional - derivative;
 		
 		//Need to have functions to check for intersections here
 		// --->
