@@ -30,14 +30,14 @@ int main(){
 		futureError=0;
 		
 		take_picture();
-		for(int i=0;i<320;i++){
+		for(int i=0;i<319;i++){
 			pixel=get_pixel(i,120,3);
 			if (pixel>whiteThreshold){
 				error += (i-160);
 				whitePixelCount++;
 			}
 		}
-		for(int i=0;i<320;i++){
+		for(int i=0;i<319;i++){
 			pixel=get_pixel(i,60,3);
 			if (pixel>whiteThreshold){
 				futureError += (i-160);
