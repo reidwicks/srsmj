@@ -28,7 +28,7 @@ int main(){
 		float kp = 0.5;
 		int i, w, s;
 		double v_left, v_right;
-		for(i=0; i<320; i++){
+		for(i=0; i<319; i++){
 			w = get_pixel(i,120,3);
 			if(w>127){
 				s=1;
