@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "e101.h"
+#include "E101.h"
 
 int lSpeed;
 int rSpeed;
@@ -32,14 +32,14 @@ int main(){
 		take_picture();
 		for(int i=0;i<320;i++){
 			pixel=get_pixel(i,120,3);
-			if (pixel>threshold){
+			if (pixel>whiteThreshold){
 				error += (i-160);
 				whitePixelCount++;
 			}
 		}
 		for(int i=0;i<320;i++){
 			pixel=get_pixel(i,60,3);
-			if (pixel>threshold){
+			if (pixel>whiteThreshold){
 				futureError += (i-160);
 			}
 		}
