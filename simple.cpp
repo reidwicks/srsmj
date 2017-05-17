@@ -31,6 +31,7 @@ int main(){
 		
 		take_picture();
 		for(int i=0;i<319;i++){
+			print(i);
 			pixel=get_pixel(i,120,3);
 			if (pixel>whiteThreshold){
 				error += (i-160);
@@ -38,6 +39,7 @@ int main(){
 			}
 		}
 		for(int i=0;i<319;i++){
+			print(i);
 			pixel=get_pixel(i,60,3);
 			if (pixel>whiteThreshold){
 				futureError += (i-160);
