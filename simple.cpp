@@ -31,7 +31,7 @@ int main(){
 		
 		take_picture();
 		for(int i=0;i<319;i++){
-			printf("%d\n",i);
+			printf("i: %d\n",i);
 			pixel=get_pixel(i,120,3);
 			if (pixel>whiteThreshold){
 				error += (i-160);
@@ -39,17 +39,19 @@ int main(){
 			}
 		}
 		for(int i=0;i<319;i++){
-			printf("%d\n",i);
+			printf("i: %d\n",i);
 			pixel=get_pixel(i,60,3);
 			if (pixel>whiteThreshold){
 				futureError += (i-160);
 			}
 		}
+		printf("futureError: %d\n", futureError);
+		printf("error: %d\n", error);
 		proportional = error*kProportional;
 		derivative = (futureError-error)*kDerivative;
 		
-		rSpeed = baseSpeed - proportional - derivative;
-		lSpeed = baseSpeed + proportional + derivative;
+		rSpeed = baseSpeed + proportional + derivative;
+		lSpeed = baseSpeed - proportional - derivative;
 		
 		//Need to have functions to check for intersections here
 		// --->
