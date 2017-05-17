@@ -1,0 +1,11 @@
+To get onto the pi:
+
+ssh pi@10.140.30.179
+
+To compile:
+
+g++ srsmj.cpp -o srsmj.o -le101
+
+To run:
+
+sudo ./srsmj.cpp

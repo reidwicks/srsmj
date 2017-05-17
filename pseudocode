@@ -1,0 +1,60 @@
+This is some psuedo-code to get an idea of how we’ll implement the functions of our robot.
+
+moveForward(){
+    Pump power into the motors;
+}
+
+turnAround(){
+    motor1 moves forward and motor2 moves backward;
+}
+
+followLine(){
+while(pixels in centre of screen are white){
+moveForward();
+}
+alignBot();
+}
+
+alignBot(){
+    if(white pixels are to the left of where they should be){
+        rotateLeft();
+}
+else if(white pixels are to the right of where they should be){
+    rotateRight();
+{
+else{
+    followLine();
+}
+}
+
+// INTERSECTION FUNCTION
+
+The idea with the intersection function is that it will check to see how many paths there are. It will store those as new functions, with a boolean True or False for whether or not they’ve been explored. The bot will save those paths, then continue on straight. If it can’t get to where it’s going, it will come back and flip those paths around (as in, if a path was on the right when it came through, now it will be on its left), and try them out, changing their “visited” variable to False if they go nowhere.
+
+I have no idea how we’re going to implement this. Hopefully someone else does.
+
+intersection(){
+    if(there are white pixels to the left){
+        New Intersection secti + (numberOfIntersections + 1); //not quite sure how this will work
+        Secti1.direction = “left”;
+        Secti1.visited = False;
+        Secti1.order = numberOfIntersections + 1;
+        numberOfIntersections += 1;
+    }
+    Else if(there are white pixels to the left){
+        New Intersection secti + (numberOfIntersections + 1);
+        Secti2.direction = “left”;
+        Secti2.visited = False;
+        Secti2.order = numberOfIntersections + 1;
+        numberOfIntersections += 1;
+    }
+    Else if(both left AND right){
+        //INSERT CODE HERE
+    }
+}
+
+takeIntersection(){
+    for(i in numberOfIntersections){
+        do something i guess idk
+    }
+}
