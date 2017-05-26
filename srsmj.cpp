@@ -1,61 +1,225 @@
 #include <stdio.h>
-#include <time.h>
 #include "E101.h"
+
+/*----------------------------/
+ * AVC Project Team Serious Mojo (SRSMJ)
+ * 
+ * Shadrach Luke Hargreaves
+ * Reid Alexander Wicks
+ * Sean Naylor
+ * Max Watson
+ * Josh Bolitho
+ **/
 
 /* motor 1 = left hand side
  * motor 2 = right hand side 
 **/
 
-int lSpeed; int rSpeed; int scale; int total;
-int moveForward(){
+
+double lSpeed;
+double rSpeed;
+int baseSpeed = 70;
+
+int futureError;
+int futureCount;
+
+int currentError;
+int currentCount;
+
+int leftCount;
+int rightCount;
+int topCount;
+
+bool leftDetected;
+bool rightDetected;
+bool topDetected;
+
+
+double kProportional = 0.007;
+double kDerivative = 0.01;// replace with 0.007 if it doesn't work
+
+
+int proportional;
+int derivative;
+
+int whiteThreshold = 100;
+
+int quad = 1;
+
+int widthThreshold = 50;
+
+int goLeft(){
+	set_motor(1,255);
+	set_motor(2,255);
+	sleep1(0,10000);
 	
-	lSpeed = 50;
-	rSpeed = 50;
-	scale = 0.2;
-	total = 0;
-	bool isWhite = false;
-	int count = 0;
+	set_motor(2,200);
+	set_motor(1,240);
+	sleep1(2,200000);
 	
-	while(true){
-		
-		count = 0;
-		total = 0;
-		take_picture();
-		for(int i=0; i<319; i++){
-			isWhite = (get_pixel(120, i, 3) > 100);
-			printf("%d ",isWhite);	
-			if(isWhite){
-				total += (160-i);
-				count ++;
-			}
+	set_motor(2,255);
+	sleep1(0,10000);
+	return 0;
+	}
+int goForwards(){
+	set_motor(1,255);
+	set_motor(2,255);
+	sleep1(0,10000);
+	
+	set_motor(1,200);
+	set_motor(2,200);
+	sleep1(1,0);
+	set_motor(1,255);
+	set_motor(2,255);
+	sleep1(0,10000);
+	return 0;
+	}
+int goRight(){
+	set_motor(1,255);
+	set_motor(2,255);
+	sleep1(0,10000);
+	
+	set_motor(1,200);
+	sleep1(2,0);
+	
+	set_motor(2,255);
+	sleep1(0,10000);
+	return 0;
+	}
+int turnAround(){
+	set_motor(1,255);
+	set_motor(2,255);
+	sleep1(0,10000);
+	
+	set_motor(1,200);
+	set_motor(2,-200);
+	sleep1(2,0);
+	set_motor(1,255);
+	set_motor(2,255);
+	sleep1(0,10000);
+	return 0;
+	}
+
+int intersection(){
+	leftDetected = false;
+	rightDetected = false;
+	topDetected = false;
+	
+	if(leftCount >= widthThreshold){
+		leftDetected = true;
+		}
+	if(rightCount >= widthThreshold){
+		rightDetected = true;
+		}
+	if(futureCount >= widthThreshold){
+		topDetected = true;
+		}
+	
+	if(leftDetected && rightDetected){
+		goLeft();
+		}
+	if(!leftDetected && !rightDetected && !topDetected){
+		turnAround();
+		}
+	if(!leftDetected && topDetected){
+		goForwards;
 		}
 		
-		printf("count: %d\n", count);
-		printf("result: %d\n", total);
-		
-		set_motor(1, lSpeed + total*scale);
-		set_motor(2, rSpeed + total*scale);
-	}	
-	stop(1);
-	stop(2);
+	
 	
 	return 0;
-}
-int moveBackward(){
-	set_motor(1, lSpeed - total*scale);
-	set_motor(2, rSpeed - total*scale);
-	
-	stop(1);
-	stop(2);
-	
-	return 0;
-}
+	}
 
 
 int main(){
 	init();
-	moveForward();
+	
+	while(quad==1){
+		int pixel;
+		
+		currentError=0;
+		futureError=0;
+		currentCount=0;
+		futureCount=0;
+		leftCount=0;
+		rightCount=0;
+		topCount=0;
+		
+		take_picture();
+		
+		// Current error & count - Middle line - 1/2
+		for(int i=0;i<320;i++){
+			pixel=get_pixel(120,i,3);
+			if (pixel>whiteThreshold){
+				currentError += (i-160);
+				currentCount++;
+			}
+		}
+		
+		// Future error & count - Future line - 3/4
+		for(int i=0;i<320;i++){
+			pixel=get_pixel(180,i,3);
+			if (pixel>whiteThreshold){
+				futureError += (i-160);
+				futureCount++;
+			}
+		}
+		
+		// right Counter - check for white pixels down right column
+		for(int i=0;i<240;i++){
+			pixel=get_pixel(i,10,3);
+			if (pixel>whiteThreshold){
+				rightCount++;
+			}
+		}
+		
+		// left Counter - check for white pixels down left column
+		for(int i=0;i<240;i++){
+			pixel=get_pixel(i,230,3);
+			if (pixel>whiteThreshold){
+				leftCount++;
+			}
+		}
+		
+		// top Counter - check for white pixels along top row
+		for(int i=0;i<320;i++){
+			pixel=get_pixel(230,i,3);
+			if (pixel>whiteThreshold){
+				topCount++;
+			}
+		}
+		//printf("leftCount: %d\n",leftCount);
+		//printf("rightCount: %d\n",rightCount);
+		//printf("topCount: %d\n",topCount);
+		//printf("currentCount: %d\n",currentCount);
+		//printf("futureCount: %d\n",futureCount);
+		
+		//printf("futureError: %d\n",futureError);
+		//printf("currentError: %d\n", currentError);
+		
+		proportional = currentError*kProportional;
+		derivative = (currentError-futureError)*kDerivative;
+		//derivative =0;
+		
+		rSpeed = (255-baseSpeed) - proportional - derivative;
+		lSpeed = (255-baseSpeed) + proportional + derivative;
+		
+		//Need to have functions to check for intersections here
+		// --->
+		
+		if(currentCount>0){
+			set_motor(1,lSpeed);
+			set_motor(2,rSpeed);
+			}
+		else{
+			set_motor(1, -200);
+			set_motor(2, -200);
 
+		}
+		
+	}
+	set_motor(1, -255);
+	set_motor(2, -255);
+	
 	return 0;
-}
-
+	}
